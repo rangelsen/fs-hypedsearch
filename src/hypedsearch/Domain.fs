@@ -2,36 +2,34 @@
 
 [<AutoOpen>]
 module Domain =
+    [<Measure>] type mz
+
+    type Charge = SinglyCharged | DoublyCharged
+
     type AminoAcid = A | R | N | D | C | Q | E | G | H | I | L | K | M | F | P | O | S | U | T | W | Y | V | B | Z | X 
 
     type Peptide = seq<AminoAcid>
 
-    // type Protein = seq<AminoAcid> ?
-
-    type Charge = int
-
     type NormalizedFragment = {
         // low
-        adjustedWeight: double
+        AdjustedWeight: double<mz>
         // high
-        charge: Charge
+        Charge: Charge
     }
 
-    type Fragment = {
-        weight: double
-        abundance: double
+    type PeptideFragment = {
+        Weight: double<mz>
+        Abundance: double
     }
 
     type Precursor = {
-        fragments: seq<Fragment>
-        weight: double
-        charge: Charge
+        Fragments: seq<PeptideFragment>
+        Weight: double<mz>
+        Charge: Charge
     }
 
-    type Spectrum = {
-        id: string
-        mz: seq<double>
-        intensity: seq<double>
-        precursor: Precursor
+    type MassSpectrum = {
+        Id: string
+        Precursor: Precursor
     }
 
