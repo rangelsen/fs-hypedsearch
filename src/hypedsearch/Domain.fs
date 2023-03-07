@@ -4,6 +4,9 @@
 module Domain =
     type Charge = SinglyCharged | DoublyCharged
 
+    [<Measure>] type Da
+    type Mass = double<Da>
+
     type AminoAcid = A | R | N | D | C | Q | E | G | H | I | L | K | M | F | P | O | S | U | T | W | Y | V | B | Z | X 
 
     type Protein = {
@@ -21,20 +24,29 @@ module Domain =
     }
 
     type PeptideFragment = {
-        Weight: double
+        Mass: Mass
         Abundance: double
     }
 
+    type MassSpectrum = seq<PeptideFragment>
+
     type Precursor = {
-        Fragments: seq<PeptideFragment>
-        Weight: double
+        Mass: Mass
         Charge: Charge
     }
 
-    type MassSpectrum = {
+    type MassSpectrumRun = {
         Id: string
         Precursor: Precursor
+        Fragments: MassSpectrum
     }
+
+    type TheoreticalPeptideFragment = {
+        Fragment: PeptideFragment
+        Peptide: Peptide
+    }
+
+    type TheoreticalMassSpectrum = seq<TheoreticalPeptideFragment>
 
     type Alignment = {
         ObservedSpectrumId: string
