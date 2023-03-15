@@ -1,39 +1,38 @@
 ﻿namespace HypedSearch.Domain
 
-[<AutoOpen>]
 module Domain =
-    type Charge = SinglyCharged | DoublyCharged
+    type Charge =
+        | SinglyCharged of uint
+        | DoublyCharged of uint
 
     [<Measure>] type Da
     type Mass = double<Da>
 
     type AminoAcid = A | R | N | D | C | Q | E | G | H | I | L | K | M | F | P | O | S | U | T | W | Y | V | B | Z | X 
 
-    type Protein = {
-        Name: string
-        AminoAcids: seq<AminoAcid>
-    }
-
-    type Peptide = seq<AminoAcid>
-
-    type NormalizedFragment = {
-        // low
-        AdjustedWeight: double
-        // high
-        Charge: Charge
-    }
-
-    type PeptideFragment = {
-        Mass: Mass
-        Abundance: double
-    }
-
-    type MassSpectrum = seq<PeptideFragment>
+    type ProteinId = uint
 
     type Precursor = {
         Mass: Mass
         Charge: Charge
     }
+
+    type Peptide = seq<AminoAcid>
+
+    type Index = uint
+
+    type PeptideFragment = {
+        Id: Index
+        Mass: double
+        Abundance: double
+    }
+
+    type NormalizedFragment = {
+        Id: Index
+        Mass: Mass
+    }
+
+    type MassSpectrum = seq<PeptideFragment>
 
     type MassSpectrumRun = {
         Id: string
@@ -42,14 +41,20 @@ module Domain =
     }
 
     type TheoreticalPeptideFragment = {
-        Fragment: PeptideFragment
         Peptide: Peptide
+        Mass: Mass
+        ParentProtein: ProteinId 
     }
 
-    type TheoreticalMassSpectrum = seq<TheoreticalPeptideFragment>
-
-    type Alignment = {
-        ObservedSpectrumId: string
+    type PeptideScore = {
+        FragmentId: Index
+        Peptide: Peptide
         Score: int
+    }
+
+    type Alignment = seq<PeptideScore>
+
+    type PeptideMassRepo = {
+        LookupMass: Mass -> Mass -> seq<TheoreticalPeptideFragment> option
     }
 
